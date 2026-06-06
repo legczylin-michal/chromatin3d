@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chromatin3d"
+version = "0.1.0"
+description = "Chromatin 3D Structure Prediction with Physics-Informed Neural Networks (PINNs)"
+authors = [{name = "Michał Legczylin"}, {name = "Sevastianos Korsak"}, {name = "Dariusz Plewczyński"}]
+readme = "README.md"
+requires-python = ">=3.14"
+
+dependencies = [
+    "numpy",
+    "pandas",
+    "torch"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
