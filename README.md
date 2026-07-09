@@ -27,4 +27,5 @@ dataset = HiCDataset("ENCFF216QQM/ENCFF216QQM_chr3_5kbp/")
 dataloader = DataLoader(dataset, batch_size=10, shuffle=True)
 ```
 
-MSVC required for torchsort
+MSVC required for torchsort:
+https://visualstudio.microsoft.com/visual-cpp-build-tools/

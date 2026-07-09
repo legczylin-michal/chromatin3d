@@ -2,9 +2,10 @@ import logging
 
 import pandas as pd
 import torch
+from tqdm import tqdm
 
 from chromatin3d.utils.conversions import pos_2_hic, normalise
-from chromatin3d.utils.losses import data_loss_ssim as data_loss
+from chromatin3d.utils.losses import data_loss_insulation_score as data_loss
 from chromatin3d.utils.losses import loops_loss, rouse_loss, smoothness_loss
 from chromatin3d.utils.metrics import linker_length_metric, persistence_length_metric, heatmap_correlation_metric
 
@@ -18,18 +19,11 @@ def train(model, optimizer, train_loader, valid_loader, epochs, repeats, patienc
 
     model.to(device)
 
-    history_losses = {
-        "data_losses": [], "loops_losses": [], "rouse_losses": [], "smoothness_losses": [], "total_losses": []
-    }
-    history_metrics = {
-        "heatmap_correlation_metrics": [],
-        "linker_length_mean_metrics": [],
-        "linker_length_std_metrics": [],
-        "persistence_length_metrics": []
-    }
+    history_losses = {"data_losses": [], "loops_losses": [], "rouse_losses": [], "smoothness_losses": [], "total_losses": []}
+    history_metrics = {"heatmap_correlation_metrics": [], "linker_length_mean_metrics": [], "linker_length_std_metrics": [], "persistence_length_metrics": []}
 
     patience_counter = 0
-    for epoch in range(epochs):
+    for epoch in tqdm(range(epochs)):
         if patience_counter >= patience:
             logger.debug("Patience triggered. End of learning")
             break

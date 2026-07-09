@@ -11,7 +11,7 @@ def pos_2_matrix_spacial(positions):
     a = positions.unsqueeze(1)
     b = positions.unsqueeze(2)
 
-    return torch.sqrt(torch.sum((a - b) ** 2, dim=3))
+    return torch.sqrt(torch.sum((a - b) ** 2, dim=3) + 1e-8)
 
 
 def pos_2_hic(positions):
@@ -23,7 +23,7 @@ def pos_2_hic(positions):
 
 
 def normalise(hic):
-    # hic = torch.log1p(hic)
+    hic = torch.log1p(hic)
     hic = hic / hic.amax(dim=(1, 2), keepdim=True)
 
     return hic

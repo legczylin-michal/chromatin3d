@@ -1,7 +1,11 @@
 import logging
+
 import torch
 import torchsort
 from torchmetrics.image import StructuralSimilarityIndexMeasure
+
+from chromatin3d.utils.misc import insulation_score
+
 logger = logging.getLogger("chromatin3d")
 
 
@@ -19,7 +23,7 @@ def data_loss_soft_rank(true_hic_matrices, pred_hic_matrices):
     n = (r_x * r_y).sum(dim=1, keepdim=True)
     d = r_x.norm(dim=1, keepdim=True) * r_y.norm(dim=1, keepdim=True)
 
-    return 1 - n / (d + 1e-8)
+    return (1 - n / (d + 1e-8)).flatten()
 
 
 def data_loss_ssim(true_hic_matrices, pred_hic_matrices):
@@ -38,7 +42,10 @@ def data_loss_ssim(true_hic_matrices, pred_hic_matrices):
 def data_loss_insulation_score(true_hic_matrices, pred_hic_matrices):
     """ batch version """
 
-    return torch.Tensor([0])
+    is_true = insulation_score(true_hic_matrices, 100)
+    is_pred = insulation_score(pred_hic_matrices, 100)
+
+    return ((is_true - is_pred) ** 2).sum(dim=1)
 
 
 # decay along from diagonal
@@ -90,6 +97,4 @@ def smoothness_loss(positions):
 
     cos_theta = (n / d).clip(min=-1, max=1)
 
-    theta = torch.arccos(cos_theta)
-
-    return ((theta - torch.pi) ** 2).mean(dim=1)
+    return ((cos_theta - torch.cos(torch.tensor(torch.pi))) ** 2).mean(dim=1)
