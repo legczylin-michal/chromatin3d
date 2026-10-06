@@ -1,7 +1,8 @@
 import logging
 
 import torch
-import torchsort
+
+# import torchsort
 from torchmetrics.image import StructuralSimilarityIndexMeasure
 
 from chromatin3d.utils.misc import insulation_score
@@ -9,25 +10,25 @@ from chromatin3d.utils.misc import insulation_score
 logger = logging.getLogger("chromatin3d")
 
 
-def data_loss_soft_rank(true_hic_matrices, pred_hic_matrices):
-    """ batch version """
-
-    # soft rank, so loss is differentiable
-    r_x = torchsort.soft_rank(true_hic_matrices.flatten(start_dim=1), regularization_strength=0.1)
-    r_y = torchsort.soft_rank(pred_hic_matrices.flatten(start_dim=1), regularization_strength=0.1)
-
-    # calculating pearson correlation on ranks
-    r_x -= r_x.mean(dim=1, keepdim=True)
-    r_y -= r_y.mean(dim=1, keepdim=True)
-
-    n = (r_x * r_y).sum(dim=1, keepdim=True)
-    d = r_x.norm(dim=1, keepdim=True) * r_y.norm(dim=1, keepdim=True)
-
-    return (1 - n / (d + 1e-8)).flatten()
+# def data_loss_soft_rank(true_hic_matrices, pred_hic_matrices):
+#     """ batch version """
+#
+#     # soft rank, so loss is differentiable
+#     r_x = torchsort.soft_rank(true_hic_matrices.flatten(start_dim=1), regularization_strength=0.1)
+#     r_y = torchsort.soft_rank(pred_hic_matrices.flatten(start_dim=1), regularization_strength=0.1)
+#
+#     # calculating pearson correlation on ranks
+#     r_x -= r_x.mean(dim=1, keepdim=True)
+#     r_y -= r_y.mean(dim=1, keepdim=True)
+#
+#     n = (r_x * r_y).sum(dim=1, keepdim=True)
+#     d = r_x.norm(dim=1, keepdim=True) * r_y.norm(dim=1, keepdim=True)
+#
+#     return (1 - n / (d + 1e-8)).flatten()
 
 
 def data_loss_ssim(true_hic_matrices, pred_hic_matrices):
-    """ batch version """
+    """batch version"""
 
     ssim = StructuralSimilarityIndexMeasure(data_range=None, reduction=None)
 
@@ -40,7 +41,7 @@ def data_loss_ssim(true_hic_matrices, pred_hic_matrices):
 
 # insulation score (take diagonal and average across perpendicular diagonals)
 def data_loss_insulation_score(true_hic_matrices, pred_hic_matrices):
-    """ batch version """
+    """batch version"""
 
     is_true = insulation_score(true_hic_matrices, 100)
     is_pred = insulation_score(pred_hic_matrices, 100)
@@ -50,34 +51,34 @@ def data_loss_insulation_score(true_hic_matrices, pred_hic_matrices):
 
 # decay along from diagonal
 def data_loss_decay(true_hic_matrices, pred_positions):
-    """ batch version """
+    """batch version"""
 
     return torch.Tensor([0])
 
 
 # SVD ranking?
 def data_loss_svd(true_hic_matrices, pred_positions):
-    """ batch version """
+    """batch version"""
 
     return torch.Tensor([0])
 
 
 # implement (convolution)
 def loops_loss(true_hic_matrices, pred_positions):
-    """ batch version """
+    """batch version"""
 
     return torch.Tensor([0])
 
 
 # compartments loss
 def compartments_loss(true_hic_matrices, pred_positions):
-    """ batch version """
+    """batch version"""
 
     return torch.Tensor([0])
 
 
 def rouse_loss(positions):
-    """ batch version """
+    """batch version"""
 
     diffs = positions[:, 1:, :] - positions[:, :-1, :]
 
@@ -87,7 +88,7 @@ def rouse_loss(positions):
 
 
 def smoothness_loss(positions):
-    """ batch version """
+    """batch version"""
 
     u = positions[:, 1:-1:, :] - positions[:, :-2, :]
     v = positions[:, 1:-1, :] - positions[:, 2:, :]

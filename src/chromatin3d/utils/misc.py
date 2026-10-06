@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 
 def insulation_score(hic, w):
-    """ batch version """
+    """batch version"""
 
     kernel = torch.ones(1, 1, w, w)
 
@@ -25,7 +25,6 @@ def visualise_hic(hic, max_value=None):
     plt.axis("off")
     plt.show()
 
-    return
 
 
 def prettify_duration(duration):
