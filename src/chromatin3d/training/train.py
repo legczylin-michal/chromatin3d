@@ -4,10 +4,10 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 
-from chromatin3d.utils.conversions import pos_2_hic, normalise
+from chromatin3d.utils.conversions import normalise, pos_2_hic
 from chromatin3d.utils.losses import data_loss_insulation_score as data_loss
 from chromatin3d.utils.losses import loops_loss, rouse_loss, smoothness_loss
-from chromatin3d.utils.metrics import linker_length_metric, persistence_length_metric, heatmap_correlation_metric
+from chromatin3d.utils.metrics import heatmap_correlation_metric, linker_length_metric, persistence_length_metric
 
 logger = logging.getLogger("chromatin3d")
 
@@ -85,10 +85,9 @@ def train(model, optimizer, train_loader, valid_loader, epochs, repeats, patienc
 
             total_l.backward()
             for name, p in model.named_parameters():
-                if p.grad is not None:
-                    if not torch.isfinite(p.grad).all():
-                        logger.debug(f"bad grad:{name}")
-                        break
+                if p.grad is not None and not torch.isfinite(p.grad).all():
+                    logger.debug(f"bad grad:{name}")
+                    break
 
             total_norm = 0
             for p in model.parameters():
@@ -96,7 +95,7 @@ def train(model, optimizer, train_loader, valid_loader, epochs, repeats, patienc
                     param_norm = p.grad.data.norm(2)
                     total_norm += param_norm.item() ** 2
 
-            total_norm = total_norm ** 0.5
+            total_norm = total_norm**0.5
             logger.debug(f"grad norm:{total_norm}")
             optimizer.step()
             logger.debug([i for i in model.parameters()])
