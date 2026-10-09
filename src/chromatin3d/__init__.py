@@ -8,7 +8,8 @@ logger.setLevel(logging.DEBUG)
 fh = logging.FileHandler("chromatin3d.log")
 fh.setLevel(logging.DEBUG)
 
-log_format = "%(asctime)s | %(name)s | %(levelname)s | %(pathname)s:%(lineno)d | %(message)s"
+# log_format = "%(asctime)s | %(name)s | %(levelname)s | %(pathname)s:%(lineno)d | %(message)s"
+log_format = "%(asctime)s | %(name)s | %(levelname)s | %(message)s"
 date_format = "%Y.%m.%d %H:%M:%S"
 
 # create formatter

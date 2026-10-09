@@ -17,6 +17,7 @@ dependencies = [
     "numpy (>=2.5.3,<3.0.0)",
     "scipy (>=1.18.1,<2.0.0)",
     "matplotlib (>=3.11.2,<4.0.0)",
+    "scikit-learn (>=1.9.1,<2.0.0)",
 ]
 
 [tool.poetry]
@@ -29,7 +30,8 @@ build-backend = "poetry.core.masonry.api"
 [dependency-groups]
 dev = [
     "ruff (>=0.16.10,<0.17.0)",
-    "mypy (>=2.4.0,<3.0.0)"
+    "mypy (>=2.4.0,<3.0.0)",
+    "notebook (>=7.6.3,<8.0.0)"
 ]
 
 [tool.ruff]

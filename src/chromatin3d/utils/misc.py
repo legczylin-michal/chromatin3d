@@ -26,7 +26,6 @@ def visualise_hic(hic, max_value=None):
     plt.show()
 
 
-
 def prettify_duration(duration):
     s = duration % 60
     duration -= s
