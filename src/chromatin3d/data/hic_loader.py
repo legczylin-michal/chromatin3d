@@ -31,12 +31,12 @@ class HiCDataset(Dataset):
         return torch.tensor(np.load(self.__filepaths[index]))
 
 
-def split(p_root_path):
+def split(p_root_path, random_state=None):
     dataset = HiCDataset(p_root_path)
 
     indices = list(range(len(dataset)))
 
-    train_indices, valid_indices = train_test_split(indices, train_size=0.7, random_state=None, shuffle=True)
+    train_indices, valid_indices = train_test_split(indices, train_size=0.7, random_state=random_state, shuffle=True)
 
     train_dataset = Subset(dataset, train_indices)
     valid_dataset = Subset(dataset, valid_indices)

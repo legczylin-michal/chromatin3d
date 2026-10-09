@@ -46,3 +46,6 @@ isort.split-on-trailing-comma = false
 quote-style = "double"
 skip-magic-trailing-comma = true
 indent-style = "space"
+
+[tool.mypy]
+disable_error_code = ["import-untyped"]
