@@ -4,11 +4,16 @@ __pycache__/
 
 .idea/
 
+data/
+
 .ruff_cache/
 .mypy_cache/
+
+.ipynb_checkpoints/
 
 .env
 .env.*
 !.env.example
 
 chromatin3d.log
+model.pth
