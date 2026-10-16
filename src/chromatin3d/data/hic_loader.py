@@ -11,23 +11,38 @@ logger = logging.getLogger("chromatin3d")
 
 
 def cut_hic(path, binsize, number_of_samples):
-    df = pd.read_table(path, header=None)
+    p = Path(path).absolute()
 
-    result = {}
+    target_path = p.parent / p.stem
+    target_path.mkdir(exist_ok=True)
 
-    for _, record in df.iterrows():
-        i = record[0] // binsize
-        j = record[1] // binsize
+    df = pd.read_table(p, header=None)
+    df.columns = ["source", "target", "count"]
 
-        row = result.get(i, {})
-        row[j] = row.get(j, 0) + record[2]
-        result[i] = row
+    rng = np.random.default_rng()
 
-    df2 = pd.DataFrame(result)
+    for _ in range(number_of_samples):
+        index = rng.integers(min(df["source"].min(), df["target"].min()), max(df["source"].max(), df["target"].max()) - 576 * binsize)
 
-    print(df2)
+        frame = df[(df["source"] >= index) & (df["target"] <= index + 576 * binsize)]
 
-    pass
+        frame["source"] //= binsize
+        frame["target"] //= binsize
+
+        min_v = min(frame["source"].min(), frame["target"].min())
+
+        frame["source"] -= min_v
+        frame["target"] -= min_v
+
+        result = np.zeros(shape=(576, 576), dtype=np.float32)
+
+        for i in range(len(frame)):
+            result[frame["source"].iloc[i], frame["target"].iloc[i]] = int(frame["count"].iloc[i])
+            result[frame["target"].iloc[i], frame["source"].iloc[i]] = int(frame["count"].iloc[i])
+
+        np.save(target_path / f"{p.stem}_{_}", result)
+
+    return
 
 
 class HiCDataset(Dataset):
