@@ -6,7 +6,7 @@ logger = logging.getLogger("chromatin3d")
 
 
 def pos_2_matrix_spacial(positions):
-    """ batch version """
+    """batch version"""
 
     a = positions.unsqueeze(1)
     b = positions.unsqueeze(2)
@@ -15,7 +15,7 @@ def pos_2_matrix_spacial(positions):
 
 
 def pos_2_hic(positions):
-    """ batch version """
+    """batch version"""
 
     distance_matrices = pos_2_matrix_spacial(positions)
 

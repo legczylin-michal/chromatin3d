@@ -5,7 +5,7 @@ from scipy.stats import spearmanrho
 
 
 def linker_length_metric(positions):
-    """ batch version """
+    """batch version"""
 
     diffs = positions[:, 1:, :] - positions[:, :-1, :]
 
@@ -31,7 +31,7 @@ def tangent_correlations(t):
     corrs = []
 
     for k in range(M):
-        dots = (t[:-k or None] * t[k:]).sum(dim=-1)
+        dots = (t[: -k or None] * t[k:]).sum(dim=-1)
         corrs.append(dots.mean())
 
     return torch.stack(corrs)
@@ -55,7 +55,7 @@ def persistence_length(corrs, ds=1.0):
 
 # revise
 def persistence_length_metric(positions):
-    """ batch version """
+    """batch version"""
 
     result = []
     for points in positions:
@@ -67,7 +67,7 @@ def persistence_length_metric(positions):
 
 
 def heatmap_correlation_metric(true_hic_matrices, pred_hic_matrices):
-    """ batch version """
+    """batch version"""
 
     with torch.no_grad():
         af = true_hic_matrices.flatten(start_dim=1)
