@@ -21,10 +21,15 @@ def cut_hic(path, binsize, number_of_samples):
 
     rng = np.random.default_rng()
 
+    pairs = set()
+
     for _ in range(number_of_samples):
         index = rng.integers(min(df["source"].min(), df["target"].min()), max(df["source"].max(), df["target"].max()) - 576 * binsize)
 
-        frame = df[(df["source"] >= index) & (df["target"] <= index + 576 * binsize)]
+        pairs.add((index.item(), (index + 576 * binsize).item()))
+
+    for i, (a, b) in enumerate(pairs):
+        frame = df[(df["source"] >= a) & (df["target"] <= b)]
 
         frame["source"] //= binsize
         frame["target"] //= binsize
@@ -40,7 +45,7 @@ def cut_hic(path, binsize, number_of_samples):
             result[frame["source"].iloc[i], frame["target"].iloc[i]] = int(frame["count"].iloc[i])
             result[frame["target"].iloc[i], frame["source"].iloc[i]] = int(frame["count"].iloc[i])
 
-        np.save(target_path / f"{p.stem}_{_}", result)
+        np.save(target_path / f"{p.stem}_{i}", result)
 
     return
 
